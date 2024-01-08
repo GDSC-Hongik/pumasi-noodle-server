@@ -122,3 +122,27 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Firebase Settings
+import os
+import firebase_admin
+from firebase_admin import credentials
+
+# FIREBASE_UNIVERSE_DOMAIN = os.environ.get('FIREBASE_UNIVERSE_DOMAIN')
+
+if not firebase_admin._apps:
+    """SETUP FIREBASE CREDENTIALS"""
+    cred = credentials.Certificate({
+        "type": os.environ.get('FIREBASE_ACCOUNT_TYPE'),
+        "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
+        "private_key_id": os.environ.get('FIREBASE_PRIVATE_KEY_ID'),
+        "private_key": os.environ.get('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
+        "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
+        "client_id": os.environ.get('FIREBASE_CLIENT_ID'),
+        "auth_uri": os.environ.get('FIREBASE_AUTH_URI'),
+        "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
+        "auth_provider_x509_cert_url": os.environ.get('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
+        "client_x509_cert_url": os.environ.get('FIREBASE_CLIENT_X509_CERT_URL')
+    })
+
+    default_app = firebase_admin.initialize_app(cred)
