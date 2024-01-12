@@ -35,7 +35,9 @@ def care_detail(request, pk):
 @api_view(['POST', 'PATCH'])
 def my_care(request):
     if request.method == 'POST':
-        print("get a care data")
+        print("create my care data")
+        DB.collection("care").add(request.data)
+        return Response(request.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'PATCH':
         print("get a care data")
