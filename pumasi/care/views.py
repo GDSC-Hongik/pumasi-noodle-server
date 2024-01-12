@@ -24,7 +24,12 @@ def care_list(request):
 def care_detail(request, pk):
     if request.method == 'GET':
         print("get a care data")
-        return Response({"method": "get", "from": "care", "pk": pk}, status=200)
+        try:
+            care_data = DB.collection("care").document(pk).get().to_dict()
+        except Exception as ex:
+            return Response({"error": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(care_data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST', 'PATCH'])
