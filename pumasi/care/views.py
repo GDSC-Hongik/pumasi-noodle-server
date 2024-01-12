@@ -36,7 +36,9 @@ def care_detail(request, pk):
 def my_care(request):
     if request.method == 'POST':
         print("create my care data")
-        DB.collection("care").add(request.data)
+        # my_email = request.user.email
+        my_email = "test2@example.com"
+        DB.collection("care").document(my_email).set(request.data)
         return Response(request.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'PATCH':
