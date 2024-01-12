@@ -42,5 +42,8 @@ def my_care(request):
         return Response(request.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'PATCH':
-        print("get a care data")
-        return Response({"method": "patch", "from": "care"}, status=200)
+        print("modify my care data")
+        # my_email = request.user.email
+        my_email = "test2@example.com"
+        DB.collection("care").document(my_email).update(request.data)
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
