@@ -51,3 +51,19 @@ def my_care(request):
         """
         client.update_care(user_email=my_email, update_data=request.data)
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT'])
+def update_status(request, pk):
+    stat = request.data.get("status")
+    if not stat:
+        return Response({"error": str("status가 전달되지 않았습니다.")}, status=status.HTTP_400_BAD_REQUEST)
+
+    if stat in ["waiting", "reserved", "accepted"]:
+        client.update_care_status(user_email=pk, status=stat)
+    else:
+        return Response(
+            {"error": str("잘못된 status 값 입니다. waiting, reserved, accepted 중에서 골라야합니다.")},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    return Response(status=status.HTTP_204_NO_CONTENT)

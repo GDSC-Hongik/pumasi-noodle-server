@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import care_list, care_detail, my_care
+from .views import care_list, care_detail, my_care, update_status
 
 urlpatterns = [
     path('', my_care),
     path('list', care_list),
-    path('<str:pk>', care_detail), # Firestore 문서의 ID를 자동 생성 문자열을 이용함.
+    path('<str:pk>', care_detail), # Firestore 문서의 ID로 이메일 이용
+    path('<str:pk>/status', update_status), # Firestore 문서의 ID로 이메일 이용
 ]

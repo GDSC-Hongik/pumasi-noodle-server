@@ -30,3 +30,12 @@ class FirebaseClient:
         else:
             raise ValueError(f"care document for {user_email} doesn't exist.")
         return care
+
+    def update_care_status(self, user_email, status):
+        care_ref = self._care_collection.document(user_email)
+        if care_ref.get().exists:
+            care_ref.update({
+                "status": status
+            })
+        else:
+            raise ValueError(f"care document for {user_email} doesn't exist.")
