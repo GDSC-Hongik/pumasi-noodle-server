@@ -50,7 +50,7 @@ def my_care(request):
             TODO : request.data 값을 시리얼라이저를 활용하여 유효성 검사 
         """
         client.update_care(user_email=my_email, update_data=request.data)
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['PUT'])
 def update_status(request, pk):
