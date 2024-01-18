@@ -133,7 +133,7 @@ from firebase_admin import credentials
 
 if not firebase_admin._apps:
     """SETUP FIREBASE CREDENTIALS"""
-    cred = credentials.Certificate({
+    cred_info = {
         "type": os.environ.get('FIREBASE_ACCOUNT_TYPE'),
         "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
         "private_key_id": os.environ.get('FIREBASE_PRIVATE_KEY_ID'),
@@ -144,6 +144,6 @@ if not firebase_admin._apps:
         "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
         "auth_provider_x509_cert_url": os.environ.get('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
         "client_x509_cert_url": os.environ.get('FIREBASE_CLIENT_X509_CERT_URL')
-    })
+    }
 
-    default_app = firebase_admin.initialize_app(cred)
+    default_app = firebase_admin.initialize_app(credentials.Certificate(cred_info))
