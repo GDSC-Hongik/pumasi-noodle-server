@@ -25,7 +25,34 @@
     ```
     pip install django==4.0 djangorestframework==3.13.1
     pip install firebase-admin django-dotenv
+    pip install pyrebase4
     ```
+
+    ```pyrebase4```를 설치할 때 jws 라이브러리를 설치하면서 decode 에러가 발생할 수 있습니다.   
+    [이 게시글](https://wesely.github.io/pip,%20python,%20pip/Fix-'cp950'-Error-when-using-'pip-install'/)을 참고하여 아래와 같은 순서로 해결할 수 있습니다.   
+   1.  jws 라이브러리를 '다운'받습니다. (설치x)
+       ```
+       pip download jws
+       ```
+       만약 다운받은 라이브러리가 캐시에 이미 저장되어 있어 동일한 오류가 계속 발생하는 경우, [이 사이트](https://pypi.org/project/jws/) 에서 파일을 직접 다운로드 받을 수 있습니다.
+   2.  다운로드 받은 파일을 압축해제 합니다.
+   3.  ```setup.py``` 의 다음 코드를 아래와 같이 수정합니다. 
+       ```(python)
+       (수정 전)
+        return open(os.path.join(os.path.dirname(file), fname).read()
+       (수정 후)
+       return open(os.path.join(os.path.dirname(file), fname), encoding=”UTF-8”).read()
+       ```
+   4. 전체 라이브러리 소스코드를 ```.tar``` 형식으로 압축합니다. (이름은 원하는대로)
+   5. 다음 코드를 실행합니다.
+      ```
+      pip install filename.tar # filename 은 자신이 지었던 이름
+      ```
+   6. 이제 ```jws``` 라이브러리가 설치되었으므로 다시 한번 ```pyrebase4``` 를 설치합니다.
+      ```
+      pip install pyrebase4
+      ```
+
 2. 이 레포지토리의 최신 코드를 다운받습니다.   
    - 최초 실행   
    ```
