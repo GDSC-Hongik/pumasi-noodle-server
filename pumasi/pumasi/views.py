@@ -1,6 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from firebase_admin import firestore
+from rest_framework import status
+from firebase_admin import auth, firestore
+from .settings import pyrebase_app
 
 @api_view(['GET'])
 def index(request):
@@ -37,3 +39,51 @@ def index(request):
         
     """
     return Response(data, status=200)
+
+@api_view(['POST'])
+def login(request):
+    try:
+        pyrebase_auth = pyrebase_app.auth()
+        user = pyrebase_auth.sign_in_with_email_and_password(
+            **request.data
+            # email=request.data["email"],
+            # password=request.data["password"]
+        )
+        return Response(user)
+    except Exception as ex:
+        return Response(
+            {"error": str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+def logout(request):
+    try:
+        id_token = request.data["id_token"]
+        data = auth.verify_id_token(id_token, check_revoked=True)
+        print(data)
+        auth.revoke_refresh_tokens(data["uid"])
+        # 놀랍게도 로그아웃 메서드가 없다...
+        return Response()
+    except Exception as ex:
+        return Response(
+            {"error": str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+def register(request):
+    try:
+        user = auth.create_user(
+            **request.data
+            # email=request.data["email"],
+            # password=request.data["password"]
+        )
+        return Response(user.email)
+    except Exception as ex:
+        return Response(
+            {"error": str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

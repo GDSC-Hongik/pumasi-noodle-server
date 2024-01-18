@@ -127,6 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Firebase Settings
 import os
 import firebase_admin
+import pyrebase
 from firebase_admin import credentials
 
 # FIREBASE_UNIVERSE_DOMAIN = os.environ.get('FIREBASE_UNIVERSE_DOMAIN')
@@ -147,3 +148,13 @@ if not firebase_admin._apps:
     }
 
     default_app = firebase_admin.initialize_app(credentials.Certificate(cred_info))
+
+    pyrebase_config = {
+        "apiKey": os.environ.get('FIREBASE_CLIENT_API_KEY'),
+        "authDomain": f"{os.environ.get('FIREBASE_PROJECT_ID')}.firebaseapp.com",
+        "databaseURL": "",
+        "storageBucket": f"{os.environ.get('FIREBASE_PROJECT_ID')}.appspot.com",
+        "serviceAccount": cred_info
+    }
+
+    pyrebase_app = pyrebase.initialize_app(pyrebase_config)
