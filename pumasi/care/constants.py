@@ -1,0 +1,1 @@
+GENDER_CHOICES = ('m', 'f')
