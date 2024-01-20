@@ -5,13 +5,15 @@ from .constants import GENDER_CHOICES
 
 class CareSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=200)
-    child_age = serializers.IntegerField(max_value=None, min_value=None)
+    child_age_from = serializers.IntegerField(max_value=None, min_value=None)
+    child_age_to = serializers.IntegerField(max_value=None, min_value=None)
     date = serializers.CharField(max_length=8)
     start_time = serializers.IntegerField(max_value=2400, min_value=0000)
     end_time = serializers.IntegerField(max_value=2400, min_value=0000)
     gender = serializers.ChoiceField(choices=GENDER_CHOICES)  # choiceField로 바꿈
     status = serializers.CharField(max_length=200, default='waiting')
     email = serializers.CharField(max_length=200)
+    id = serializers.CharField(max_length=200)
 
     def validate_email(self, value):
         if '@' not in value:

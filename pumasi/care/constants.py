@@ -1,1 +1,1 @@
-GENDER_CHOICES = ('m', 'f')
+GENDER_CHOICES = ('m', 'f', 'both')
