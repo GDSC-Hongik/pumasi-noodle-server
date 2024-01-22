@@ -31,25 +31,28 @@ def care_detail(request, pk):
 
 @api_view(['POST', 'PATCH'])
 def my_care(request):
-    if request.method == 'POST':
-        print("create my care data")
-        # my_email = request.user.email
-        my_email = "test3@example.com" # 로그인 구현이 안되어 있으므로, 테스트 이메일 사용
+    my_email = request.user.get("email")
+    print(my_email)
 
+    if request.method == 'POST':
         # request.data 값을 시리얼라이저를 활용하여 유효성 검사 
         serializer = CareSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid(raise_exception=True):
+            print("validation error")
+            return Response({
+                "error": "request body로 들어온 값이 유효하지 않습니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        client.create_care(user_email=my_email, care_data=request.data)
-
-        return Response(request.data, status=status.HTTP_201_CREATED)
+        print(serializer.data)
+        client.create_care(user_email=my_email, care_data=serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'PATCH':
         print("modify my care data")
-        # my_email = request.user.email
-        my_email = "test3@example.com" # 로그인 구현이 안되어 있으므로, 테스트 이메일 사용
-        
-        # request.data 값을 시리얼라이저를 활용하여 유효성 검사 
+        # request.data 값을 시리얼라이저를 활용하여 유효성 검사
+        ### ruquest.data 에는 수정할 데이터가 일부만 들어올 수 있음.
+        ### 이 때 시리얼라이저로 이렇게 유효성 검사를 하면 필드 값이 없다고 에러가 발생할 수 있을 것 같음.
+        ### 이 문제는 어떻게 해야할지 고민필요 (다 required = False로 해야 하는가.. 아니면 그냥 수정안된 데이터도 포함해서 보내는가)
         serializer = CareSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
