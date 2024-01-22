@@ -1,10 +1,16 @@
-from rest_framework.decorators import api_view
+import json
+
+from requests.exceptions import HTTPError
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
+from rest_framework.exceptions import ParseError
 from rest_framework import status
 from firebase_admin import auth, firestore
+
 from .settings import pyrebase_app
 
 @api_view(['GET'])
+@authentication_classes([])
 def index(request):
     """
     settings.py 에서 데이터베이스 접속 정보를 .env 파일로부터 가져온 뒤, 그 정보를 토대로 데이터베이스와 연결까지 해둠.
@@ -41,6 +47,7 @@ def index(request):
     return Response(data, status=200)
 
 @api_view(['POST'])
+@authentication_classes([])
 def login(request):
     try:
         pyrebase_auth = pyrebase_app.auth()
@@ -50,7 +57,24 @@ def login(request):
             # password=request.data["password"]
         )
         return Response(user)
+    except HTTPError as ex:
+        error_data = json.loads(str(ex))
+        print(error_data)
+        return Response(
+            {"error": str(ex)},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    except ParseError as ex:
+        return Response(
+            {"error": "JSON 형식이 잘못되어 파싱할 수 없습니다."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     except Exception as ex:
+        print(ex)
+        print(ex.__class__)
+        print(ex.args)
         return Response(
             {"error": str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -60,10 +84,8 @@ def login(request):
 @api_view(['POST'])
 def logout(request):
     try:
-        id_token = request.data["id_token"]
-        data = auth.verify_id_token(id_token, check_revoked=True)
-        print(data)
-        auth.revoke_refresh_tokens(data["uid"])
+        print(request.user)
+        auth.revoke_refresh_tokens(request.user.get('uid'))
         # 놀랍게도 로그아웃 메서드가 없다...
         return Response()
     except Exception as ex:
@@ -74,6 +96,7 @@ def logout(request):
 
 
 @api_view(['POST'])
+@authentication_classes([])
 def register(request):
     try:
         user = auth.create_user(
