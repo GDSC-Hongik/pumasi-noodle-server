@@ -23,3 +23,4 @@ class CareSerializer(serializers.Serializer):
     def validate(self, attrs):
         if attrs['start_time'] > attrs['end_time']:
             raise ValidationError('시간을 다시 설정하세요.')
+        return attrs
