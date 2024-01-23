@@ -49,6 +49,12 @@ def index(request):
 @api_view(['POST'])
 @authentication_classes([])
 def login(request):
+    if "email" not in request.data.keys() or "password" not in request.data.keys():
+        return Response(
+            {"error: email, password 필드 중 누락된 필드가 잇습니다."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
     try:
         pyrebase_auth = pyrebase_app.auth()
         user = pyrebase_auth.sign_in_with_email_and_password(
@@ -58,11 +64,25 @@ def login(request):
         )
         return Response(user)
     except HTTPError as ex:
-        error_data = json.loads(str(ex))
-        print(error_data)
+        # print(ex.args[1]) # print(ex.args) 결과로 에러 데이터가 어떻게 구성되어 있는지 확인함.
+        error_data = json.loads(str(ex.args[1]))['error']
+        if error_data['code'] == 400:
+            message = error_data['message']
+            error_message = ''
+            if message == "INVALID_EMAIL":
+                error_message = "유효하지 않은 이메일 형식입니다."
+            elif message == "INVALID_LOGIN_CREDENTIALS":
+                error_message = "존재하지 않는 이메일 또는 잘못된 비밀번호 입니다."
+            else:
+                error_message = str(ex)
+
+            return Response(
+                {"error": message, "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         return Response(
-            {"error": str(ex)},
-            status=status.HTTP_400_BAD_REQUEST
+            {'error': str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
     except ParseError as ex:
@@ -72,9 +92,6 @@ def login(request):
         )
 
     except Exception as ex:
-        print(ex)
-        print(ex.__class__)
-        print(ex.args)
         return Response(
             {"error": str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
