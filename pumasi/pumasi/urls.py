@@ -24,4 +24,5 @@ urlpatterns = [
     path('logout/', logout),
     path('care/', include('care.urls')),
     path('test/', index),
+    path('user/', include('user.urls')),
 ]
