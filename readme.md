@@ -5,6 +5,7 @@
 - Django Rest Framework (3.13.1)
 - Firebase Admin (6.3.0)
 - Django Dotenv (1.4.2)
+- Pyrebase4
 
 코드잇에서 수강했던 [DRF강의 개발환경](https://www.codeit.kr/topics/django-rest-framework/lessons/5826) 을 참고하였습니다.
 
@@ -18,7 +19,7 @@
   |   Care    | '맡기', '맡기기' 데이터 CRUD API 담당 |   
   |   User    |        미구현 (앱 이름 가칭)        |   
   | Community |        미구현 (앱 이름 가칭)        |
-  |   Chat    |        미구현 (앱 이름 가칭)        |
+  |   Chat    |     채팅 데이터 CRUD API 담당      |
 
 ## 실행 방법
 1. 아래 코드를 실행하여 필요한 라이브러리를 설치합니다.   
