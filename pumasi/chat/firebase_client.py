@@ -9,6 +9,13 @@ class FirebaseClient:
         self._db = firestore.client()
         self._chat_collection = self._db.collection("chat")
 
+    def read_all_chat_rooms(self, user_email):
+        chat_rooms_docs_ref = self._chat_collection.where(
+            filter=fs.FieldFilter("members", "array_contains", user_email)
+        ).stream()
+
+        return [doc.to_dict() for doc in chat_rooms_docs_ref]
+
     def create_chat_room(self, chat_room_data):
         self._chat_collection.add({
             "messages": [],
