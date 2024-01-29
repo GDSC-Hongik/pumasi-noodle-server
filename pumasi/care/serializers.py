@@ -22,8 +22,3 @@ class CareSerializer(serializers.Serializer):
         if '@' not in value:
             raise ValidationError('유효한 이메일 주소가 아닙니다.')
         return value
-
-    def validate(self, attrs):
-        if attrs['start_time'] > attrs['end_time']:
-            raise ValidationError('시간을 다시 설정하세요.')
-        return attrs
