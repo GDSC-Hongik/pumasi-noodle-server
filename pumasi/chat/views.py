@@ -23,8 +23,9 @@ def chat_list(request):
 def chat_detail():
     pass
 
-def chat_settings():
-    pass
+@api_view(['POST'])
+def chat_settings(request):
+    return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
 def chat_message():
     pass
