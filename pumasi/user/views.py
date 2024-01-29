@@ -11,7 +11,7 @@ client = FirebaseClient()
 def UserPageView(request, pk):
     user_data = client.read_user(user_id=pk)
     # DB에서 읽어온 user_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
-    serializer = UserSerializer(user_data)
+    serializer = UserSerializer(user_data, many=True)
     return Response(serializer.data)
 
 
