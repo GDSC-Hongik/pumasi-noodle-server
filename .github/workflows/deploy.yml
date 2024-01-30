@@ -26,7 +26,8 @@ jobs:
           passphrase: ${{ secrets.REMOTE_SSH_PASSPHRASE }}
           port: 22
           script: |
-            whoami
+            cd /home/ubuntu/html_link/project/pumasi-noodle-server/pumasi
+            git pull
       # - name: Set up Python ${{ matrix.python-version }}
 #       uses: actions/setup-python@v3
 #       with:
