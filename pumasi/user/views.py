@@ -7,6 +7,13 @@ from .add_data import add_data_to_firestore
 
 client = FirebaseClient()
 
+@api_view(['GET'])
+def user_list(request):
+    user_list_data = client.read_user_all()
+    # DB에서 읽어온 user_list_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
+    serializer = UserSerializer(user_list_data, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET', 'PATCH'])
 def UserPageView(request, pk):

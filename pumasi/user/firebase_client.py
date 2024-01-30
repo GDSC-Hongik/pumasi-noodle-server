@@ -7,6 +7,11 @@ class FirebaseClient:
         self._db = firestore.client()
         self._user_collection = self._db.collection("user")
 
+    # 모든 user 문서의 정보를 가져온다
+    def read_user_all(self):
+        docs = self._user_collection.stream()
+        return [{**doc.to_dict(), "id": doc.id} for doc in docs]
+
     # user 문서의 정보를 가져온다
     def read_user(self, user_id):
         print(user_id)
