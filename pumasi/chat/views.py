@@ -6,6 +6,30 @@ from rest_framework import status
 chat_client = FirebaseClient()
 
 
+@api_view(['POST'])
+def create_chat_room(request):
+    try:
+        creator = request.user.get("email")
+        invite_user = request.data.get("invite_user")
+
+        if not creator:
+            return Response("로그인 user email 정보가 없으므로 접근할 수 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
+
+        if not invite_user:
+            # TODO : invite_user 가 존재하는 유저인지 체크할 필요가 있을듯
+            return Response("초대할 user email 정보가 없습니다.", status=status.HTTP_400_BAD_REQUEST)
+
+        created_room_id = chat_client.create_chat_room(creator_email=creator, invite_email=invite_user)
+        return Response({
+            "room_id": created_room_id
+        }, status=status.HTTP_201_CREATED)
+
+    except Exception as ex:
+        return Response({
+            "error": "예상치 못한 에러가 발생하였습니다.\n" + str(ex)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @api_view(['GET'])
 def chat_list(request):
     try:
