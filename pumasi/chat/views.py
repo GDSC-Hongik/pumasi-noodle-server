@@ -56,5 +56,34 @@ def chat_detail(request, room_id):
 def chat_settings(request):
     return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
 
-def chat_message():
-    pass
+
+@api_view(['POST'])
+def chat_message(request, room_id):
+    try:
+        # TODO: request 형식 유효성을 시리얼라이저로 체크
+        message = request.data.get("message")
+        email = request.user.get("email")
+
+        if not email:
+            return Response("user email 정보가 없으므로 접근할 수 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
+
+        if not message:
+            return Response({
+                "error": "request에 message가 없습니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not chat_client.check_chat_room_exists(chat_room_id=room_id):
+            return Response({
+                "error": "존재하지 않는 room id 입니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not chat_client.check_is_user_in_chat_room(chat_room_id=room_id, user_email=email):
+            return Response("user가 참여하지 않은 채팅방입니다.", status=status.HTTP_403_FORBIDDEN)
+
+        chat_client.send_message(chat_room_id=room_id, user_email=email, message=message)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    except Exception as ex:
+        return Response({
+            "error": "예상치 못한 에러가 발생하였습니다.\n" + str(ex)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
