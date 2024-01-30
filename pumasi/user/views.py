@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .firebase_client import FirebaseClient
 from .serializers import UserSerializer, ChildSerializer
+from .add_data import add_data_to_firestore
 
 client = FirebaseClient()
 
@@ -41,3 +42,8 @@ def ChildDetail(request, pk, child_pk):
     child_doc_data = client.read_child(user_id=pk, child_number=child_pk)
     serializer = ChildSerializer(child_doc_data, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def AddData(request):
+    add_data_to_firestore()
