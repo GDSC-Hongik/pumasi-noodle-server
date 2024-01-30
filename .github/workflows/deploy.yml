@@ -1,23 +1,34 @@
 name: Django Server Deploy
 
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
-# jobs:
-#   build:
+jobs:
+  deploy:
 
-#     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 #     strategy:
 #       max-parallel: 4
 #       matrix:
 #         python-version: [3.7, 3.8, 3.9]
 
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Set up Python ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: execute remote ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_SSH_HOST }}
+          username: ${{ secrets.REMOTE_SSH_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          passphrase: ${{ secrets.REMOTE_SSH_PASSPHRASE }}
+          port: 22
+          script: |
+            cd /home/ubuntu/html_link/project/pumasi-noodle-server/pumasi
+            git pull
+      # - name: Set up Python ${{ matrix.python-version }}
 #       uses: actions/setup-python@v3
 #       with:
 #         python-version: ${{ matrix.python-version }}

@@ -15,3 +15,15 @@ class ChatFirebaseClientTest(TestCase):
 
     def test_if_chat_doc_exists_checking_function_works2(self):
         self.assertTrue(self.firebase_client.check_chat_room_exists(chat_room_id="4cMFICHurZSxKsRfOitc"))
+
+    def test_유저가_존재하는_채팅방_대상으로_유저_존재_체크(self):
+        self.assertTrue(self.firebase_client.check_is_user_in_chat_room(
+            chat_room_id="4cMFICHurZSxKsRfOitc",
+            user_email=self.user_email)
+        )
+
+    def test_DB에_없는_채팅방_대상으로_유저_존재_체크(self):
+        self.assertFalse(self.firebase_client.check_is_user_in_chat_room(
+            chat_room_id="blabla",
+            user_email=self.user_email
+        ))
