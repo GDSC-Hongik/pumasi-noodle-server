@@ -11,10 +11,4 @@ def add_data_to_firestore():
         'introduce': '내 아이처럼 소중하게 보살피겠습니다'
     }
 
-    # Firestore 데이터베이스 컬렉션 참조
-    users_ref = client.collection('users')
-
-    # 데이터 추가
-    doc_ref = users_ref.add(data_to_add)
-
-    print('Document written with ID:', doc_ref.id)
+    client.create_care("test@example.com", data_to_add)

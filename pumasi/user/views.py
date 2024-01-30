@@ -47,3 +47,4 @@ def ChildDetail(request, pk, child_pk):
 @api_view(['GET'])
 def AddData(request):
     add_data_to_firestore()
+    return Response(status=status.HTTP_204_NO_CONTENT)
