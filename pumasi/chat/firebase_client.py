@@ -55,3 +55,11 @@ class FirebaseClient:
     def check_chat_room_exists(self, chat_room_id):
         chat_doc = self._chat_collection.document(chat_room_id).get()
         return chat_doc.exists
+
+    def check_is_user_in_chat_room(self, chat_room_id, user_email):
+        chat_doc = self._chat_collection.document(chat_room_id).get()
+        if chat_doc.exists:
+            members = chat_doc.to_dict().get("members")
+            return user_email in members
+
+        return False
