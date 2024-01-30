@@ -17,6 +17,10 @@ class FirebaseClient:
             raise ValueError(f"user {user_id} doesn't exist.")
         return my_page
 
+    # user 문서의 정보를 수정한다
+    def update_user(self, user_id, update_data):
+        self._user_collection.document(user_id).update(update_data)
+
     # user 문서의 하위 컬렉션 child에서 모든 문서를 가져온다
     def read_child_all(self, user_id):
         print(user_id)

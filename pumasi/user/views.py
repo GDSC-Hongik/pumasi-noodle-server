@@ -7,12 +7,25 @@ from .serializers import UserSerializer, ChildSerializer
 client = FirebaseClient()
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PATCH'])
 def UserPageView(request, pk):
-    user_data = client.read_user(user_id=pk)
-    # DB에서 읽어온 user_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
-    serializer = UserSerializer(user_data, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        user_data = client.read_user(user_id=pk)
+        # DB에서 읽어온 user_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
+        serializer = UserSerializer(user_data)
+        return Response(serializer.data)
+
+    if request.method == 'PATCH':
+        user_data = client.read_user(user_id=pk)
+        serializer = UserSerializer(user_data, many=True)
+        # DB에서 읽어온 user_data 값을 시리얼라이저를 통한 유효성 검사
+        if not serializer.is_valid():
+            print("validation error")
+            return Response({
+                "error": "request body로 들어온 값이 유효하지 않습니다."},
+                status=status.HTTP_400_BAD_REQUEST)
+
+        client.update_user(user_id=pk, update_data=request.data)
 
 
 @api_view(['GET'])
