@@ -17,6 +17,10 @@ class FirebaseClient:
             raise ValueError(f"user {user_id} doesn't exist.")
         return my_page
 
+    # user 문서를 생성한다
+    def create_care(self, user_id, user_data):
+        self._user_collection.document(user_id).set(user_data)
+
     # user 문서의 정보를 수정한다
     def update_user(self, user_id, update_data):
         self._user_collection.document(user_id).update(update_data)
