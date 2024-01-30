@@ -13,4 +13,4 @@ def add_data_to_firestore():
 
     client.create_care("test@example.com", data_to_add)
     doc_ref = client.read_user("test@example.com")
-    print('Document written with ID:', doc_ref.id)
+    print('Document written with Name:', doc_ref.name)
