@@ -1,7 +1,6 @@
 from firebase_admin import firestore
 from .firebase_client import FirebaseClient
 
-# Firestore 데이터 추가 예제
 def add_data_to_firestore():
     client = FirebaseClient()
     # Firestore 데이터
@@ -19,6 +18,3 @@ def add_data_to_firestore():
     doc_ref = users_ref.add(data_to_add)
 
     print('Document written with ID:', doc_ref.id)
-
-# 함수 호출
-add_data_to_firestore()
