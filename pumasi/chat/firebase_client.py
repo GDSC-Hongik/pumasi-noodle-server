@@ -16,11 +16,12 @@ class FirebaseClient:
 
         return [doc.to_dict() for doc in chat_rooms_docs_ref]
 
-    def create_chat_room(self, chat_room_data):
-        self._chat_collection.add({
+    def create_chat_room(self, creator_email, invite_email):
+        created_time, doc_ref = self._chat_collection.add({
             "messages": [],
-            "members": []
+            "members": [creator_email, invite_email]
         })
+        return doc_ref.id
 
     def send_message(self, chat_room_id, user_email, message):
         chat_doc = self._chat_collection.document(chat_room_id).get()
