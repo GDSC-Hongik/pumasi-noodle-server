@@ -39,3 +39,10 @@ class FirebaseClient:
             })
         else:
             raise ValueError(f"care document for {user_email} doesn't exist.")
+
+    def delete_care(self, user_email):
+        try:
+            self._care_collection.document(user_email).delete()
+        except Exception as ex:
+            print("firebase_client.py delete_care, error was occured while deleting care data")
+            raise ex
