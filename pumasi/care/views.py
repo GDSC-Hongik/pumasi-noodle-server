@@ -29,7 +29,7 @@ def care_detail(request, pk):
         return Response(serializer.data)
 
 
-@api_view(['POST', 'PATCH'])
+@api_view(['POST', 'PATCH', 'DELETE'])
 def my_care(request):
     my_email = request.user.get("email")
     print(my_email)
@@ -57,6 +57,10 @@ def my_care(request):
         serializer.is_valid(raise_exception=True)
         
         client.update_care(user_email=my_email, update_data=request.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    if request.method == 'DELETE':
+        client.delete_care(user_email=my_email)
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     
