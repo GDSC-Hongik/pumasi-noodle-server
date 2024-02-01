@@ -55,3 +55,7 @@ def ChildDetail(request, pk, child_pk):
 def AddData(request):
     add_data_to_firestore()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def TestFunc():
+    print("test for git push")
