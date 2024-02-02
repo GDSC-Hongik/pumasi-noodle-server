@@ -48,13 +48,9 @@ def my_care(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'PATCH':
-        print("modify my care data")
-        # request.data 값을 시리얼라이저를 활용하여 유효성 검사
-        ### ruquest.data 에는 수정할 데이터가 일부만 들어올 수 있음.
-        ### 이 때 시리얼라이저로 이렇게 유효성 검사를 하면 필드 값이 없다고 에러가 발생할 수 있을 것 같음.
-        ### 이 문제는 어떻게 해야할지 고민필요 (다 required = False로 해야 하는가.. 아니면 그냥 수정안된 데이터도 포함해서 보내는가)
-        serializer = CareSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        # request 데어터 형식이 시리얼라이저와 맞지 않으므로 주석처리
+        # serializer = CareSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
         
         client.update_care(user_email=my_email, update_data=request.data)
         return Response(status=status.HTTP_204_NO_CONTENT)
