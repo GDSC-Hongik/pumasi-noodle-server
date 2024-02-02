@@ -65,6 +65,11 @@ def ChildDetail(request, pk, child_pk):
         client.update_child(user_id=pk, child_number=child_pk, update_data=request.data)
 
 
+@api_view(['DELETE'])
+def ChildDelete(request, pk, child_pk):
+    client.delete_child(user_id=pk, child_number=child_pk)
+
+
 @api_view(['GET'])
 def AddUserData(request):
     add_user_data_to_firestore()
