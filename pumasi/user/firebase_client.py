@@ -43,8 +43,11 @@ class FirebaseClient:
         child_collection = self._db.collection("user").document(user_id).collection("Child")
         docs = child_collection.stream()
 
+        result = []
         for doc in docs:
-            return [{**doc.to_dict(), "id": doc.id}]
+            result.append({**doc.to_dict(), "id": doc.id})
+
+        return result
 
     # user 문서의 하위 컬렉션 child에서 개별 문서를 가져온다
     def read_child(self, user_id, child_number):
