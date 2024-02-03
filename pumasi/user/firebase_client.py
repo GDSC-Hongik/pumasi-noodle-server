@@ -67,7 +67,7 @@ class FirebaseClient:
         user_doc_snapshot = user_doc_ref.get()
 
         if user_doc_snapshot.exists:
-            index = user_doc_snapshot.to_dict()['child_index']
+            index = user_doc_ref.to_dict()['child_index']
             print('child_index:', index)
         else:
             raise ValueError(f"user {user_id} doesn't exist.")
