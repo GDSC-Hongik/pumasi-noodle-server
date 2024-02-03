@@ -23,7 +23,7 @@ def add_child_data_to_firestore():
     child_data_to_add_1 = {
         'name': '아이1',
         'gender': 'm',
-        'age': '6',
+        'age': 6,
         'blood_type': 'AB',
         'allergies': '없음',
         'notes': '낯을 가림'
@@ -31,7 +31,7 @@ def add_child_data_to_firestore():
     child_data_to_add_2 = {
         'name': '아이2',
         'gender': 'f',
-        'age': '11',
+        'age': 11,
         'blood_type': 'A',
         'allergies': '복숭아 알러지',
         'notes': '애착인형이 있어야 잠을 잠'
