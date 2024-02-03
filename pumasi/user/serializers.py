@@ -7,6 +7,7 @@ class UserSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=200)
     point = serializers.IntegerField(max_value=None, min_value=None)
     introduce = serializers.CharField(max_length=200)
+    child_index = serializers.IntegerField(max_value=None, min_value=None)
 
 class ChildSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=200)

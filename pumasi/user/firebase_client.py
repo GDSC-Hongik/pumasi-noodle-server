@@ -60,9 +60,28 @@ class FirebaseClient:
         return child_page
 
     # child 문서를 생성한다
-    def create_child(self, user_id, child_number, child_data):
+    def create_child(self, user_id, child_data):
+
+        ### child 문서의 id을 지정하기 위한 index를 user 문서에서 가져온다
+        user_doc_ref = self._user_collection.document(user_id)
+        user_doc_snapshot = user_doc_ref.get()
+
+        if user_doc_snapshot.exists:
+            index = user_doc_snapshot.to_dict()['child_index']
+            print('child_index:', index)
+        else:
+            raise ValueError(f"user {user_id} doesn't exist.")
+
+        ### 받아온 index를 id로 가지는 child 문서를 생성한다.
         child_collection = self._db.collection("user").document(user_id).collection("Child")
-        child_collection.document(child_number).set(child_data)
+        child_collection.document(index).set(child_data)
+
+        ### user 문서의 index를 update해준다.
+        index = index + 1
+        update_index = {'child_index': index}
+
+        # 문서 업데이트
+        user_doc_ref.update(update_index)
 
     # child 문서의 정보를 수정한다
     def update_child(self, user_id, child_number, update_data):

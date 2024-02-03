@@ -48,7 +48,7 @@ def ChildList(request, pk):
         new_data = request.data
         serializer = ChildSerializer(new_data, many=True)
         if serializer.is_valid():
-            ## client.create_child(user_id=pk, child_number=)  <== 이 부분 어떻게 할지 고민중
+            client.create_child(user_id=pk, child_data=serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
