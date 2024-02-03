@@ -74,7 +74,7 @@ class FirebaseClient:
 
         ### 받아온 index를 id로 가지는 child 문서를 생성한다.
         child_collection = self._db.collection("user").document(user_id).collection("Child")
-        child_collection.document(index).set(child_data)
+        child_collection.document(str(index)).set(child_data)
 
         ### user 문서의 index를 update해준다.
         index = index + 1
