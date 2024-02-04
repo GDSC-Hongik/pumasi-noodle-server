@@ -53,6 +53,9 @@ class FirebaseClient:
         else:
             raise ValueError(f"chat document for {chat_room_id} doesn't exist.")
 
+    def delete_chat_room(self, chat_room_id):
+        self._chat_collection.document(chat_room_id).delete()
+
     def check_chat_room_exists(self, chat_room_id):
         chat_doc = self._chat_collection.document(chat_room_id).get()
         return chat_doc.exists
