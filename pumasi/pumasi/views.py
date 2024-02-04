@@ -116,13 +116,27 @@ def logout(request):
 @authentication_classes([])
 def register(request):
     try:
+        email = request.data.get("email")
+        password = request.data.get("password")
+        if not email or not password:
+            return Response(
+                {"error": "email, password 중 누락된 필드가 있습니다."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         user = auth.create_user(
             **request.data
             # email=request.data["email"],
             # password=request.data["password"]
         )
         return Response(user.email)
+    except ValueError as ex:
+        return Response(
+            {"error": str(ex)},
+            status=status.HTTP_400_BAD_REQUEST
+        )
     except Exception as ex:
+        print(ex.__class__)
         return Response(
             {"error": str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
