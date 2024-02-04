@@ -36,15 +36,24 @@ def UserDetail(request, pk):
         client.update_user(user_id=pk, update_data=request.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def ChildList(request, pk):
-    child_data = client.read_child_all(user_id=pk)
-    # DB에서 읽어온 child_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
-    serializer = ChildSerializer(child_data, many=True)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        child_data = client.read_child_all(user_id=pk)
+        # DB에서 읽어온 child_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
+        serializer = ChildSerializer(child_data, many=True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        new_data = request.data
+        serializer = ChildSerializer(new_data, many=True)
+        if serializer.is_valid():
+            client.create_child(user_id=pk, child_data=serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PATCH'])
+@api_view(['GET', 'PATCH', 'DELETE'])
 def ChildDetail(request, pk, child_pk):
     if request.method == 'GET':
         child_doc_data = client.read_child(user_id=pk, child_number=child_pk)
@@ -63,6 +72,9 @@ def ChildDetail(request, pk, child_pk):
                 status=status.HTTP_400_BAD_REQUEST)
 
         client.update_child(user_id=pk, child_number=child_pk, update_data=request.data)
+
+    if request.method == 'DELETE':
+        client.delete_child(user_id=pk, child_number=child_pk)
 
 
 @api_view(['GET'])
