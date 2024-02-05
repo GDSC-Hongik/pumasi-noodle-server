@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 from rest_framework import status
-from firebase_admin import auth, firestore
+from firebase_admin import auth, firestore, exceptions
 
 from .settings import pyrebase_app
 
@@ -124,19 +124,36 @@ def register(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        user = auth.create_user(
+        created_user = auth.create_user(
             **request.data
             # email=request.data["email"],
             # password=request.data["password"]
         )
-        return Response(user.email)
+
+        db = firestore.client()
+        db.collection("user").document(request.data["email"]).set({
+            "name": "새로운 유저",
+            "address": "주소를 입력해주세요.",
+            "point": 0,
+            "introduce": "소개 문구를 입력해주세요.",
+            "child_index": 1,
+        })
+
+        return Response(created_user.email)
     except ValueError as ex:
+        auth.delete_user(created_user.uid)
+        return Response(
+            {"error": str(ex)},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    except exceptions.AlreadyExistsError as ex:
         return Response(
             {"error": str(ex)},
             status=status.HTTP_400_BAD_REQUEST
         )
     except Exception as ex:
         print(ex.__class__)
+        auth.delete_user(created_user.uid)
         return Response(
             {"error": str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
