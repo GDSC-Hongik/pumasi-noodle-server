@@ -46,3 +46,17 @@ class FirebaseClient:
         except Exception as ex:
             print("firebase_client.py delete_care, error was occured while deleting care data")
             raise ex
+
+    def request_care(self, care_id, requester_email, requester_child_id):
+        try:
+            care_ref = self._care_collection.document(care_id)
+            if care_ref.get().exists:
+                care_ref.update({
+                    "requester_email": requester_email,
+                    "requester_child_id": requester_child_id,
+                    "status": "reserved"
+                })
+            else:
+                raise ValueError(f"care document for {care_id} doesn't exist.")
+        except Exception as ex:
+            raise ex
