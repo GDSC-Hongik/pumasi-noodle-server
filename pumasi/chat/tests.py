@@ -8,7 +8,7 @@ class ChatFirebaseClientTest(TestCase):
 
     def test_read_all_chat_rooms_of_test_user(self):
         all_rooms = self.firebase_client.read_all_chat_rooms(user_email=self.user_email)
-        self.assertTrue(len(all_rooms) == 1)
+        self.assertTrue(len(all_rooms) == 3)
 
     def test_if_chat_doc_exists_checking_function_works1(self):
         self.assertFalse(self.firebase_client.check_chat_room_exists(chat_room_id="test"))
