@@ -77,13 +77,36 @@ def ChildDetail(request, pk, child_pk):
         client.delete_child(user_id=pk, child_number=child_pk)
 
 
+# 실제 사용하는 기능 아님
 @api_view(['GET'])
 def AddUserData(request):
     add_user_data_to_firestore()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# 실제 사용하는 기능 아님
+@api_view(['POST'])
+def AddUserDataPost(request, pk):
+    new_data = request.data
+    serializer = UserSerializer(new_data, many=True)
+    if serializer.is_valid():
+        client.create_user(user_id=pk, user_data=serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# 실제 사용하는 기능 아님
 @api_view(['GET'])
 def AddChildData(request):
     add_child_data_to_firestore()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+'''(개발중)
+@api_view(['GET'])
+def UserCareList(request, pk):
+    care_list_data = client.read_care_all()
+    # DB에서 읽어온 care_list_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
+    serializer = CareSerializer(care_list_data, many=True)
+    return Response(serializer.data)
+'''

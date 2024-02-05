@@ -6,6 +6,7 @@ class FirebaseClient:
         # firebase app is set in 'settings.py'
         self._db = firestore.client()
         self._user_collection = self._db.collection("user")
+        self._care_collection = self._db.collection("care")
 
 
     ### user 문서
