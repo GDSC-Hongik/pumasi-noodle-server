@@ -28,6 +28,7 @@ jobs:
           script: |
             cd /home/ubuntu/html_link/project/pumasi-noodle-server/pumasi
             git pull
+            sudo service uwsgi restart
       # - name: Set up Python ${{ matrix.python-version }}
 #       uses: actions/setup-python@v3
 #       with:
