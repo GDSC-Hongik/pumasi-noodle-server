@@ -4,7 +4,7 @@
 - Django (4.0)
 - Django Rest Framework (3.13.1)
 - Firebase Admin (6.3.0)
-- Django Dotenv (1.4.2)
+- Python Dotenv (1.0.1)
 - Pyrebase4
 
 코드잇에서 수강했던 [DRF강의 개발환경](https://www.codeit.kr/topics/django-rest-framework/lessons/5826) 을 참고하였습니다.
@@ -25,7 +25,7 @@
 1. 아래 코드를 실행하여 필요한 라이브러리를 설치합니다.   
     ```
     pip install django==4.0 djangorestframework==3.13.1
-    pip install firebase-admin django-dotenv
+    pip install firebase-admin python-dotenv
     pip install pyrebase4
     ```
 
