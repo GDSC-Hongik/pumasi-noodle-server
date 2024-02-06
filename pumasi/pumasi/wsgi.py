@@ -8,9 +8,13 @@ https://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/
 """
 
 import os
+import dotenv
 
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pumasi.settings')
+
+env_path = dotenv.find_dotenv()
+dotenv.load_dotenv(env_path)
 
 application = get_wsgi_application()
