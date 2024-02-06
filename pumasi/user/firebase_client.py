@@ -97,3 +97,25 @@ class FirebaseClient:
         child_collection = self._db.collection("user").document(user_id).collection("Child")
         child_doc_to_delete = child_collection.document(child_number)
         child_doc_to_delete.delete()
+
+    
+    ### care 데이터
+    
+    # 현재 유저(가 맡기기로 한) care 데이터 문서들을 모두 가져온다
+    def read_user_care_all(self, user_id):
+        docs = self._care_collection.stream()
+        result = []
+        
+        for doc in docs:
+            doc_snapshot = doc.get()
+            requester_email = doc_snapshot.to_dict()['requester_email']
+
+            # 가져온 care 문서들 중 requester_email 필드가 user_id와 같은 것들을 모아 반환
+            if requester_email == user_id:
+                result.append({**doc.to_dict(), "id": doc.id})
+            
+        return result
+
+    # 특정 care 데이터 문서를 가져온다
+    ### 개발중...
+    ### def read_user_care_detail(self, user_id, )
