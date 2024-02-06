@@ -46,7 +46,7 @@ def ChildList(request, pk):
     
     if request.method == 'POST':
         new_data = request.data
-        serializer = ChildSerializer(new_data, many=True)
+        serializer = ChildSerializer(data=new_data, many=True)
         if serializer.is_valid():
             client.create_child(user_id=pk, child_data=serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -101,11 +101,10 @@ def AddChildData(request):
     add_child_data_to_firestore()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 '''(개발중)
 @api_view(['GET'])
 def UserCareList(request, pk):
-    care_list_data = client.read_care_all()
+    care_list_data = client.read_user_care_all(user_id=pk)
     # DB에서 읽어온 care_list_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환
     serializer = CareSerializer(care_list_data, many=True)
     return Response(serializer.data)
