@@ -36,7 +36,7 @@ def index(request):
 
     # 가져온 데이터를 딕셔너리로 바꿔줌. Response는 딕셔너리를 받아서 JSON 으로 변환하기 때문.
     data = test_data.to_dict()
-    data["add_1"] = "add_1"
+    data["add_2"] = "add_2"
 
     # 지금까지 분리해서 코드를 작성했지만 이런 식으로 이어서 작성할 수 있음.
     # data = db.collection("test").document("test").get().to_dict()
