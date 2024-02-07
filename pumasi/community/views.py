@@ -10,7 +10,12 @@ client = FirebaseClient()
 
 @api_view(['GET'])
 def post_list(reqeust):
-    return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+    post_list_data = client.read_post_all()
+    serializer = CommunitySerializer()
+    return Response(
+        list(map(serializer.to_representation, post_list_data)),
+        status=status.HTTP_200_OK
+    )
 
 
 @api_view(['POST'])
