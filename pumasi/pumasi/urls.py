@@ -26,4 +26,5 @@ urlpatterns = [
     path('test/', index),
     path('user/', include('user.urls')),
     path('chat/', include('chat.urls')),
+    path('community/', include('community.urls')),
 ]
