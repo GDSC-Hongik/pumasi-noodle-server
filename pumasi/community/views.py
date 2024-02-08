@@ -44,7 +44,11 @@ def post_create(request):
 def post_detail(request, post_id):
     try:
         if request.method == 'GET':
-            post_data = client.read_post(post_id)
+            try:
+                post_data = client.read_post(post_id)
+            except ValueError as ex:
+                return Response({"error": str(ex)}, status=status.HTTP_404_NOT_FOUND)
+
             serializer = CommunitySerializer()
             return Response(serializer.to_representation(post_data), status=status.HTTP_200_OK)
 
