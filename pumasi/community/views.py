@@ -22,9 +22,12 @@ def post_list(reqeust):
 @api_view(['POST'])
 def post_create(request):
     try:
+        author = request.user.get("email")
+        if not author:
+            return Response({"error": "로그인한 유저 정보를 가져오지 못했습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+
         raw_data = request.data
-        # TODO : request.user 체크 해야함.
-        raw_data["author"] = request.user["email"]
+        raw_data["author"] = author
         serializer = CommunitySerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
