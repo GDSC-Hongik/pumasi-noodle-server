@@ -10,14 +10,18 @@ client = FirebaseClient()
 
 @api_view(['GET'])
 def post_list(reqeust):
-    # TODO : try-except 으로 감싸기
-    post_list_data = client.read_post_all()
-    serializer = CommunitySerializer()
-    return Response(
-        list(map(serializer.to_representation, post_list_data)),
-        status=status.HTTP_200_OK
-    )
-
+    try:
+        post_list_data = client.read_post_all()
+        serializer = CommunitySerializer()
+        return Response(
+            list(map(serializer.to_representation, post_list_data)),
+            status=status.HTTP_200_OK
+        )
+    except Exception as ex:
+        return Response(
+            {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @api_view(['POST'])
 def post_create(request):
