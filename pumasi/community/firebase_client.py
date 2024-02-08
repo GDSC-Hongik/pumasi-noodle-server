@@ -45,3 +45,14 @@ class FirebaseClient:
         })
 
         return doc_ref.get().id
+
+    def modify_post(self, post_id, data):
+        post_doc = self._community_collection.document(post_id)
+        post_doc.update({
+            **data,
+            "modify_date": fs.SERVER_TIMESTAMP,
+        })
+
+    def check_author(self, post_id, check_author):
+        author = self._community_collection.document(post_id).get().get("author")
+        return author == check_author
