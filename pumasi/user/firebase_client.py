@@ -107,15 +107,38 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_snapshot = doc.get()
-            requester_email = doc_snapshot.to_dict()['requester_email']
+            doc_data = doc.get(None)
 
-            # 가져온 care 문서들 중 requester_email 필드가 user_id와 같은 것들을 모아 반환
-            if requester_email == user_id:
-                result.append({**doc.to_dict(), "id": doc.id})
+            if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
+                requester_email = doc_data['requester_email']
+
+                # 가져온 care 문서들 중 requester_email 필드가 user_id와 같은 것들을 모아 반환
+                if requester_email == user_id:
+                    result.append({**doc.to_dict(), "id": doc.id})
+            
+            else:
+                pass
             
         return result
 
-    # 특정 care 데이터 문서를 가져온다
-    ### 개발중...
-    ### def read_user_care_detail(self, user_id, )
+    # 현재 유저(가 맡기기로 한) care 데이터 문서들 중 특정 문서를 가져온다
+    def read_user_care_detail(self, user_id, child_id):
+        docs = self._care_collection.stream()
+        result = []
+        
+        for doc in docs:
+            doc_data = doc.get(None)
+
+            if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
+                requester_email = doc_data['requester_email']
+                requester_child_id = doc_data['requester_child_id']
+
+                # 가져온 care 문서들 중 requester_email, requester_child_id 필드가 각각 user_id, child_id 와 일치하는 문서를 찾아 반환한다
+                if requester_email == user_id and requester_child_id == child_id:
+                    result.append({**doc.to_dict(), "id": doc.id})
+                    break
+            
+            else:
+                pass
+
+        return result
