@@ -17,7 +17,7 @@ class ChildSerializer(serializers.Serializer):
     allergies = serializers.CharField(max_length=200)
     notes = serializers.CharField(max_length=200)
 
-'''(개발중)
+
 class CareSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=200)
     child_age_from = serializers.IntegerField(max_value=None, min_value=None)
@@ -32,6 +32,7 @@ class CareSerializer(serializers.Serializer):
     # id 필드는 백엔드에서 직접 넣어주는 값이라, 데이터를 생성할 때는 없어도 되는 값.
     id = serializers.CharField(max_length=200, required=False)
 
+    # 맡기기로 한 유저의 email과 child_id
     requester_email = serializers.CharField(max_length=200)
     requester_child_id = serializers.IntegerField(max_value=None, min_value=None)
 
@@ -39,4 +40,3 @@ class CareSerializer(serializers.Serializer):
         if '@' not in value:
             raise ValidationError('유효한 이메일 주소가 아닙니다.')
         return value
-'''

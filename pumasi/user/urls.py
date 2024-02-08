@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import UserList, UserDetail, ChildList, ChildDetail, AddUserData, AddChildData, AddUserDataPost
+from .views import UserList, UserDetail, ChildList, ChildDetail, AddUserData, AddChildData, AddUserDataPost, UserCareList, UserCareDetail
 
 urlpatterns = [
     path("", UserList), # 전체 유저 리스트
@@ -10,6 +10,6 @@ urlpatterns = [
     path("<str:pk>", UserDetail),
     path("<str:pk>/child", ChildList),
     path("<str:pk>/child/<int:child_pk>", ChildDetail),
-    # path("<str:pk>/care", UserCareList) <- 개발중
-    # path("<str:pk>/care/detail", ) <- 개발중
+    path("<str:pk>/care", UserCareList),
+    path("<str:pk>/care/<int:child_pk>", UserCareDetail)
 ]
