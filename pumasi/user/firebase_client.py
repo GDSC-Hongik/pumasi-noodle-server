@@ -107,8 +107,7 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_snapshot = doc.get(None)
-            doc_data = doc_snapshot.to_dict()
+            doc_data = doc.get(None)
 
             if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
                 requester_email = doc_data['requester_email']
@@ -128,8 +127,7 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_snapshot = doc.get(None)
-            doc_data = doc_snapshot.to_dict()
+            doc_data = doc.get(None)
 
             if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
                 requester_email = doc_data['requester_email']
