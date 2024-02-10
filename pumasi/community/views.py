@@ -76,7 +76,18 @@ def post_detail(request, post_id):
             client.modify_post(post_id=post_id, data=serializer.validated_data)
             return Response(status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+        elif request.method == 'DELETE':
+            author = request.user.get("email")
+            if not author:
+                return Response({"error": "로그인한 유저 정보를 가져오지 못했습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+
+            if not client.check_author(post_id=post_id, check_author=author):
+                return Response({"error": "작성자가 아니므로 글 삭제 권한이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+            client.delete_post(post_id=post_id)
+            return Response(status=status.HTTP_200_OK)
+
+
     except ValidationError as ex:
         return Response({"error": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as ex:

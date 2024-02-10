@@ -53,6 +53,10 @@ class FirebaseClient:
             "modify_date": fs.SERVER_TIMESTAMP,
         })
 
+    def delete_post(self, post_id):
+        post_doc = self._community_collection.document(post_id)
+        post_doc.delete()
+
     def check_author(self, post_id, check_author):
         author = self._community_collection.document(post_id).get().get("author")
         return author == check_author
