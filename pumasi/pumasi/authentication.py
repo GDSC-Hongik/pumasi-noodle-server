@@ -3,7 +3,6 @@ from firebase_admin import auth
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        print(request.META)
         id_token = request.META.get('HTTP_AUTHORIZATION')
         if not id_token:
             raise Exception("No ID Token")
