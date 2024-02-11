@@ -15,3 +15,4 @@ class CommunitySerializer(serializers.Serializer):
     )
     created_date    = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
     modify_date     = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
+    post_id         = serializers.CharField(read_only=True)

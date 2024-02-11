@@ -12,7 +12,7 @@ class FirebaseClient:
 
     def read_post_all(self):
         docs = self._community_collection.stream()
-        return [doc.to_dict() for doc in docs]
+        return [{**doc.to_dict(), "post_id": doc.id} for doc in docs]
 
     def read_post(self, post_id):
         post_snapshot = self._community_collection.document(post_id).get()
