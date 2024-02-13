@@ -22,7 +22,7 @@ class FirebaseClient:
 
         post_data = post_snapshot.to_dict()
 
-        comments_ref = post_ref.collection("comments").stream()
+        comments_ref = post_ref.collection("comments").order_by("created_date", direction=fs.Query.ASCENDING).stream()
         comments_data = [comment.to_dict() for comment in comments_ref]
         post_data["comment_count"] = len(comments_data)
         return {
