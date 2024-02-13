@@ -15,11 +15,20 @@ class FirebaseClient:
         return [{**doc.to_dict(), "post_id": doc.id} for doc in docs]
 
     def read_post(self, post_id):
-        post_snapshot = self._community_collection.document(post_id).get()
+        post_ref = self._community_collection.document(post_id)
+        post_snapshot = post_ref.get()
         if not post_snapshot.exists:
             raise ValueError(f"no post with id {post_id}")
 
-        return post_snapshot.to_dict()
+        post_data = post_snapshot.to_dict()
+
+        comments_ref = post_ref.collection("comments").stream()
+        comments_data = [comment.to_dict() for comment in comments_ref]
+        post_data["comment_count"] = len(comments_data)
+        return {
+            **post_data,
+            "comments": comments_data
+        }
 
     def create_post(self, post_data):
         author = post_data.get("author")

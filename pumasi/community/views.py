@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from .serializers import CommunitySerializer
+from .serializers import CommunitySerializer, CommentSerializer
 from .firebase_client import FirebaseClient
 
 client = FirebaseClient()
@@ -52,7 +52,11 @@ def post_detail(request, post_id):
     try:
         if request.method == 'GET':
             try:
+                comment_serializer = CommentSerializer()
                 post_data = client.read_post(post_id)
+                post_data["comments"] = [
+                    comment_serializer.to_representation(comment_data) for comment_data in post_data.get("comments")
+                ]
             except ValueError as ex:
                 return Response({"error": str(ex)}, status=status.HTTP_404_NOT_FOUND)
 

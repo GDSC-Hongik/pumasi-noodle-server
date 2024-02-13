@@ -13,6 +13,16 @@ class CommunitySerializer(serializers.Serializer):
     tag             = serializers.ListField(
         child=serializers.CharField(max_length=10)
     )
+    comments        = serializers.ListField(
+        child=serializers.DictField(read_only=True)
+    )
     created_date    = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
     modify_date     = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
     post_id         = serializers.CharField(read_only=True)
+
+
+class CommentSerializer(serializers.Serializer):
+    user_email      = serializers.EmailField()
+    user_name       = serializers.CharField()
+    content         = serializers.CharField()
+    created_date    = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
