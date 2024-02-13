@@ -65,6 +65,22 @@ class FirebaseClient:
         post_doc = self._community_collection.document(post_id)
         post_doc.delete()
 
+    def add_comment(self, post_id, user_email, content):
+        user_snapshot = self._user_collection.document(user_email).get()
+        if not user_snapshot.exists:
+            raise AttributeError(f"no user {user_email}'s document in user collection")
+
+        name = user_snapshot.get("name")
+        if not name:
+            raise AttributeError(f"no 'name' data in user {user_snapshot}'s document")
+
+        self._community_collection.document(post_id).collection("comments").add({
+            "content": content,
+            "user_email": user_email,
+            "user_name": name,
+            "created_date": fs.SERVER_TIMESTAMP,
+        })
+
     def check_author(self, post_id, check_author):
         author = self._community_collection.document(post_id).get().get("author")
         return author == check_author

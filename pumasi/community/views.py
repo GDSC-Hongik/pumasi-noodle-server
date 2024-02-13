@@ -109,3 +109,22 @@ def post_like(request, post_id):
             {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+@api_view(['POST'])
+def comment_create(request, post_id):
+    try:
+        content = request.data.get("content")
+        user_email = request.user.get("email")
+        if not content:
+            return Response({"error": "댓글 내용이 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_email:
+            return Response({"error": "로그인한 유저 정보가 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+        client.add_comment(post_id=post_id, user_email=user_email, content=content)
+        return Response(status=status.HTTP_201_CREATED)
+    except Exception as ex:
+        return Response(
+            {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
