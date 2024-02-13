@@ -95,3 +95,17 @@ def post_detail(request, post_id):
             {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+@api_view(['POST'])
+def post_like(request, post_id):
+    try:
+        client.increase_like(post_id=post_id)
+        return Response(status=status.HTTP_200_OK)
+    except ValueError as ex:
+        return Response({"error": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as ex:
+        return Response(
+            {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

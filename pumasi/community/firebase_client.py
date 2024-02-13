@@ -53,6 +53,14 @@ class FirebaseClient:
             "modify_date": fs.SERVER_TIMESTAMP,
         })
 
+    def increase_like(self, post_id):
+        post_doc = self._community_collection.document(post_id)
+        if not post_doc.get().exists:
+            raise ValueError(f"Post ID {post_id} doesn't exist")
+        post_doc.update({
+            "like": fs.Increment(1)
+        })
+
     def delete_post(self, post_id):
         post_doc = self._community_collection.document(post_id)
         post_doc.delete()
