@@ -1,4 +1,5 @@
 from firebase_admin import firestore
+from google.cloud.firestore_v1 import Client
 from firebase_admin.firestore import firestore as fs
 import datetime
 
@@ -6,13 +7,17 @@ import datetime
 class FirebaseClient:
     def __init__(self) -> None:
         # firebase app is set in 'settings.py'
-        self._db = firestore.client()
+        self._db : Client = firestore.client()
         self._community_collection = self._db.collection("community")
         self._user_collection = self._db.collection("user")
 
     def read_post_all(self):
         docs = self._community_collection.stream()
-        return [{**doc.to_dict(), "post_id": doc.id} for doc in docs]
+        return [{
+            **doc.to_dict(),
+            "post_id": doc.id,
+            "comment_count": doc.reference.collection("comments").count().get()[0][0].value
+        } for doc in docs]
 
     def read_post(self, post_id):
         post_ref = self._community_collection.document(post_id)

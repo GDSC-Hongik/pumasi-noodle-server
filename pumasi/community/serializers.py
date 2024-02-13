@@ -14,7 +14,9 @@ class CommunitySerializer(serializers.Serializer):
         child=serializers.CharField(max_length=10)
     )
     comments        = serializers.ListField(
-        child=serializers.DictField(read_only=True)
+        child=serializers.DictField(),
+        read_only=True,
+        required=False,
     )
     created_date    = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
     modify_date     = serializers.DateTimeField(read_only=True, format="%y-%m-%d %H:%M:%S")
