@@ -46,7 +46,7 @@ def ChildList(request, pk):
     
     if request.method == 'POST':
         new_data = request.data
-        serializer = ChildSerializer(data=new_data, many=True)
+        serializer = ChildSerializer(data=new_data)
         if serializer.is_valid():
             client.create_child(user_id=pk, child_data=serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
