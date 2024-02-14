@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.exceptions import ValidationError
 from .serializers import CommunitySerializer, CommentSerializer
 from .firebase_client import FirebaseClient
@@ -132,3 +133,29 @@ def comment_create(request, post_id):
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
+@api_view(['PATCH'])
+def comment_modify(request: Request, post_id, comment_id):
+    try:
+        request_data: dict = request.data
+        request_user: dict = request.user
+
+        content_to_modify = request_data.get("content")
+        user = request_user.get("email")
+
+        if not content_to_modify:
+            return Response({"error": "변경할 댓글 내용을 전달해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user:
+            return Response({"error": "유저 정보가 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not client.check_comment_author(post_id=post_id, comment_id=comment_id, check_author=user):
+            return Response({"error": f"{user}은 댓글 작성자가 아니므로 수정할 수 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+        client.modify_comment(post_id=post_id, comment_id=comment_id, content=content_to_modify)
+        return Response(status=status.HTTP_200_OK)
+    except Exception as ex:
+        return Response(
+            {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

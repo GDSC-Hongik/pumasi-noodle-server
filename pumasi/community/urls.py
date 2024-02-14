@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import post_detail, post_list, post_create, post_like, comment_create
+from .views import post_detail, post_list, post_create, post_like, comment_create, comment_modify
 
 urlpatterns = [
     path('list', post_list),
@@ -7,4 +7,5 @@ urlpatterns = [
     path('post/<str:post_id>', post_detail),
     path('post/<str:post_id>/like', post_like),
     path('post/<str:post_id>/comment', comment_create),
+    path('post/<str:post_id>/comment/<str:comment_id>', comment_modify)
 ]

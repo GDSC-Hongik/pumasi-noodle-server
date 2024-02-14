@@ -1,5 +1,5 @@
 from firebase_admin import firestore
-from google.cloud.firestore_v1 import Client
+from google.cloud.firestore_v1 import Client, CollectionReference
 from firebase_admin.firestore import firestore as fs
 import datetime
 
@@ -95,6 +95,15 @@ class FirebaseClient:
             "created_date": fs.SERVER_TIMESTAMP,
         })
 
+    def modify_comment(self, post_id, comment_id, content):
+        comments_collection: CollectionReference = self._community_collection.document(post_id).collection("comments")
+        comments_collection.document(comment_id).update({"content": content})
+
     def check_author(self, post_id, check_author):
         author = self._community_collection.document(post_id).get().get("author")
         return author == check_author
+
+    def check_comment_author(self, post_id, comment_id, check_author):
+        comments_collection: CollectionReference = self._community_collection.document(post_id).collection("comments")
+        author = comments_collection.document(comment_id).get().get("user_email")
+        return check_author == author
