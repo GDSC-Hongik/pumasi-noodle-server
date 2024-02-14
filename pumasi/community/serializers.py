@@ -24,6 +24,7 @@ class CommunitySerializer(serializers.Serializer):
 
 
 class CommentSerializer(serializers.Serializer):
+    comment_id      = serializers.CharField(read_only=True)
     user_email      = serializers.EmailField()
     user_name       = serializers.CharField()
     content         = serializers.CharField()
