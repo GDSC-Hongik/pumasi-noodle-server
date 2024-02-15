@@ -107,7 +107,8 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_data = doc.get(None)
+            doc_ref = doc.get()
+            doc_data = doc_ref.to_dict()
 
             if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
                 requester_email = doc_data['requester_email']
