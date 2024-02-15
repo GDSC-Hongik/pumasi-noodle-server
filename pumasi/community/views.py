@@ -134,26 +134,30 @@ def comment_create(request, post_id):
         )
 
 
-@api_view(['PATCH'])
+@api_view(['PATCH', 'DELETE'])
 def comment_modify(request: Request, post_id, comment_id):
     try:
-        request_data: dict = request.data
         request_user: dict = request.user
-
-        content_to_modify = request_data.get("content")
+        request_data: dict = request.data
         user = request_user.get("email")
-
-        if not content_to_modify:
-            return Response({"error": "변경할 댓글 내용을 전달해주세요."}, status=status.HTTP_400_BAD_REQUEST)
 
         if not user:
             return Response({"error": "유저 정보가 없습니다."}, status=status.HTTP_401_UNAUTHORIZED)
 
         if not client.check_comment_author(post_id=post_id, comment_id=comment_id, check_author=user):
-            return Response({"error": f"{user}은 댓글 작성자가 아니므로 수정할 수 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": f"{user}은 댓글 작성자가 아니므로 수정/삭제할 수 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
-        client.modify_comment(post_id=post_id, comment_id=comment_id, content=content_to_modify)
-        return Response(status=status.HTTP_200_OK)
+        if request.method == 'PATCH':
+            content_to_modify = request_data.get("content")
+            if not content_to_modify:
+                return Response({"error": "변경할 댓글 내용을 전달해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+
+            client.modify_comment(post_id=post_id, comment_id=comment_id, content=content_to_modify)
+            return Response(status=status.HTTP_200_OK)
+
+        elif request.method == 'DELETE':
+            client.delete_comment(post_id=post_id, comment_id=comment_id)
+            return Response(status=status.HTTP_200_OK)
     except Exception as ex:
         return Response(
             {"error": "의도치 않은 오류가 발생했습니다.\n" + str(ex)},

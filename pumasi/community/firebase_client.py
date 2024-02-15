@@ -99,6 +99,10 @@ class FirebaseClient:
         comments_collection: CollectionReference = self._community_collection.document(post_id).collection("comments")
         comments_collection.document(comment_id).update({"content": content})
 
+    def delete_comment(self, post_id, comment_id):
+        comments_collection: CollectionReference = self._community_collection.document(post_id).collection("comments")
+        comments_collection.document(comment_id).delete()
+
     def check_author(self, post_id, check_author):
         author = self._community_collection.document(post_id).get().get("author")
         return author == check_author
