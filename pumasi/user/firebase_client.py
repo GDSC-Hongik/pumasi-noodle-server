@@ -107,7 +107,7 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_snapshot = doc.get()
+            doc_snapshot = doc.get(None)
             requester_email = doc_snapshot.get("requester_email")
             requester_child_id = doc_snapshot.get("requester_child_id")
 
