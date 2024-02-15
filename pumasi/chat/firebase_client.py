@@ -14,7 +14,7 @@ class FirebaseClient:
             filter=fs.FieldFilter("members", "array_contains", user_email)
         ).stream()
 
-        return [doc.to_dict() for doc in chat_rooms_docs_ref]
+        return [{**doc.to_dict(), "room_id": doc.id} for doc in chat_rooms_docs_ref]
 
     def create_chat_room(self, creator_email, invite_email):
         created_time, doc_ref = self._chat_collection.add({
