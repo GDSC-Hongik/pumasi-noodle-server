@@ -87,6 +87,10 @@ class FirebaseClient:
         if not requester_ref.get().exists:
             raise ValueError(f"user document for {requester_email} doesn't exist.")
 
+        requester_point = requester_ref.get().get("point")
+        if requester_point < point:
+            raise ValueError(f"care requester {requester_email}'s point is not enough")
+
         if not carer_ref.get().exists:
             raise ValueError(f"user document for {carer_email} doesn't exist.")
 

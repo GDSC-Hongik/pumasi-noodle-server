@@ -114,6 +114,8 @@ def complete_care(request, pk):
 
         client.complete_care(care_id=pk, care_rating=rating, point=point)
         return Response(status=status.HTTP_200_OK)
+    except ValueError as ex:
+        return Response({"error": f"잘못된 요청입니다.\n{str(ex)}"}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as ex:
         return Response(
             {"error": "의도치 않은 에러가 발생하였습니다.\n" + str(ex)},
