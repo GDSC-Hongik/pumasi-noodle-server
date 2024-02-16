@@ -46,7 +46,7 @@ class FirebaseClient:
 
         result = []
         for doc in docs:
-            result.append({**doc.to_dict(), "id": doc.id})
+            result.append({**doc.to_dict(), "child_id": doc.id})
 
         return result
 
