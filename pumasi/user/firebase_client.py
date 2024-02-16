@@ -107,10 +107,11 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_data = doc.get(None)
+            doc_snapshot = doc.get(None)
+            requester_email = doc_snapshot.get("requester_email")
+            requester_child_id = doc_snapshot.get("requester_child_id")
 
-            if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
-                requester_email = doc_data['requester_email']
+            if requester_email and requester_child_id:
 
                 # 가져온 care 문서들 중 requester_email 필드가 user_id와 같은 것들을 모아 반환
                 if requester_email == user_id:
@@ -127,11 +128,11 @@ class FirebaseClient:
         result = []
         
         for doc in docs:
-            doc_data = doc.get(None)
+            doc_snapshot = doc.get(None)
+            requester_email = doc_snapshot.get("requester_email")
+            requester_child_id = doc_snapshot.get("requester_child_id")
 
-            if 'requester_email' in doc_data and 'requester_child_id' in doc_data:
-                requester_email = doc_data['requester_email']
-                requester_child_id = doc_data['requester_child_id']
+            if requester_email and requester_child_id:
 
                 # 가져온 care 문서들 중 requester_email, requester_child_id 필드가 각각 user_id, child_id 와 일치하는 문서를 찾아 반환한다
                 if requester_email == user_id and requester_child_id == child_id:
