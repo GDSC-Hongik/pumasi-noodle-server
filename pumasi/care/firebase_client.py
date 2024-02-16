@@ -1,12 +1,16 @@
 import firebase_admin
 from firebase_admin import firestore
+from firebase_admin.firestore import firestore as fs
+from google.cloud.firestore_v1 import DocumentReference, CollectionReference, DocumentSnapshot
+from .constants import CARE_ACCEPTED
 
 
 class FirebaseClient:
     def __init__(self) -> None:
         # firebase app is set in 'settings.py'
         self._db = firestore.client()
-        self._care_collection = self._db.collection("care")
+        self._care_collection: CollectionReference = self._db.collection("care")
+        self._user_collection: CollectionReference = self._db.collection("user")
 
     def create_care(self, user_email, care_data):
         self._care_collection.document(user_email).set(care_data)
@@ -60,3 +64,51 @@ class FirebaseClient:
                 raise ValueError(f"care document for {care_id} doesn't exist.")
         except Exception as ex:
             raise ex
+
+    def complete_care(self, care_id: str, care_rating: float, point: int):
+        care_ref: DocumentReference = self._care_collection.document(care_id)
+        care_snapshot: DocumentSnapshot = care_ref.get()
+
+        if not care_snapshot.exists:
+            raise ValueError(f"care document for {care_id} doesn't exist.")
+
+        requester_email: str    = care_snapshot.get("requester_email")
+        care_status: str        = care_snapshot.get("status")
+        rating_count: int       = care_snapshot.get("rating_count")
+        rating: float           = care_snapshot.get("rating")
+
+        if care_status != "reserved":
+            raise ValueError(f"care document's status for {care_id} should be 'reserved'")
+
+        carer_email = care_id
+        requester_ref: DocumentReference = self._user_collection.document(requester_email)
+        carer_ref: DocumentReference = self._user_collection.document(carer_email)
+
+        if not requester_ref.get().exists:
+            raise ValueError(f"user document for {requester_email} doesn't exist.")
+
+        if not carer_ref.get().exists:
+            raise ValueError(f"user document for {carer_email} doesn't exist.")
+
+        new_rating = round((rating_count * rating + care_rating) / (rating_count + 1), ndigits=1)
+
+        care_ref.update({
+            "status": CARE_ACCEPTED,
+            "rating_count": fs.Increment(1),
+            "rating": new_rating,
+        })
+
+        requester_ref.update({
+            "point": fs.Increment(-point)
+        })
+
+        carer_ref.update({
+            "point": fs.Increment(point)
+        })
+
+    def check_requester(self, care_id: str, requester_email: str):
+        care_snapshot = self._care_collection.document(care_id).get()
+        if not care_snapshot.exists:
+            raise ValueError(f"care document for {care_id} doesn't exist.")
+
+        return care_snapshot.get("requester_email") == requester_email

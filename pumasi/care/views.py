@@ -95,3 +95,27 @@ def request_care(request, pk):
             {"error": "의도치 않은 에러가 발생하였습니다.\n" + str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@api_view(['POST'])
+def complete_care(request, pk):
+    try:
+        requester_email = request.user.get("email")
+        point = request.data.get("point")
+        rating = request.data.get("rating")
+
+        if not requester_email:
+            return Response({"error": "로그인 유저의 정보가 누락되었습니다."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not point or not rating:
+            return Response({"error": "point, rating 정보가 모두 필요합니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not client.check_requester(care_id=pk, requester_email=requester_email):
+            return Response({"error": "맡기기를 요청한 유저가 아니므로, 맡기를 완료할 수 없습니다."}, status=status.HTTP_403_FORBIDDEN)
+
+        client.complete_care(care_id=pk, care_rating=rating, point=point)
+        return Response(status=status.HTTP_200_OK)
+    except Exception as ex:
+        return Response(
+            {"error": "의도치 않은 에러가 발생하였습니다.\n" + str(ex)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
