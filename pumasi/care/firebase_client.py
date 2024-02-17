@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import firestore
 from firebase_admin.firestore import firestore as fs
 from google.cloud.firestore_v1 import DocumentReference, CollectionReference, DocumentSnapshot
-from .constants import CARE_ACCEPTED
+from .constants import CARE_ACCEPTED, CARE_WAITING
 
 
 class FirebaseClient:
@@ -28,7 +28,7 @@ class FirebaseClient:
         self._care_collection.document(user_email).update(update_data)
 
     def read_care_all(self):
-        docs = self._care_collection.stream()
+        docs = self._care_collection.where(filter=fs.FieldFilter("status", "==", CARE_WAITING)).stream()
         result = []
         for doc in docs:
             name = self._user_collection.document(doc.id).get().get("name")
