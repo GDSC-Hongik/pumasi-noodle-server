@@ -16,6 +16,7 @@ class ChildSerializer(serializers.Serializer):
     blood_type = serializers.ChoiceField(choices=BLOOD_TYPE_CHOICES)
     allergies = serializers.CharField(max_length=200)
     notes = serializers.CharField(max_length=200)
+    child_id =serializers.IntegerField(read_only=True)
 
 
 class CareSerializer(serializers.Serializer):
