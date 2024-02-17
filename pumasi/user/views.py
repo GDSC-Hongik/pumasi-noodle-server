@@ -25,13 +25,13 @@ def UserDetail(request, pk):
 
     if request.method == 'PATCH':
         user_data = client.read_user(user_id=pk)
-        serializer = UserSerializer(user_data, many=True)
-        # DB에서 읽어온 user_data 값을 시리얼라이저를 통한 유효성 검사
-        if not serializer.is_valid():
-            print("validation error")
-            return Response({
-                "error": "request body로 들어온 값이 유효하지 않습니다."},
-                status=status.HTTP_400_BAD_REQUEST)
+        # request body가 serializer와 맞지 않으므로 사용 x
+        ### serializer = UserSerializer(data=user_data, many=True)
+        ### if not serializer.is_valid():
+        ###     print("validation error")
+        ###     return Response({
+        ###         "error": "request body로 들어온 값이 유효하지 않습니다."},
+        ###         status=status.HTTP_400_BAD_REQUEST)
 
         client.update_user(user_id=pk, update_data=request.data)
 
