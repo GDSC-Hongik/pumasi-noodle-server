@@ -15,6 +15,7 @@ def care_list(request):
     return Response(serializer.data)
 
 
+
 @api_view(['GET'])
 def care_detail(request, pk):
     if request.method == 'GET':
@@ -22,7 +23,7 @@ def care_detail(request, pk):
         try:
             care_data = client.read_care(user_email=pk)
             # DB에서 읽어온 care_data 값을 시리얼라이저를 활용하여 Response 형식으로 변환 
-            serializer = CareSerializer(care_data, many=True)
+            serializer = CareSerializer(care_data)
         except ValueError as ex:
             return Response({"error": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
 
