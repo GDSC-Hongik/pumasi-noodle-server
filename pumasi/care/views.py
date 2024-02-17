@@ -118,6 +118,7 @@ def complete_care(request, pk):
     except ValueError as ex:
         return Response({"error": f"잘못된 요청입니다.\n{str(ex)}"}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as ex:
+        raise ex
         return Response(
             {"error": "의도치 않은 에러가 발생하였습니다.\n" + str(ex)},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
