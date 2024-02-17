@@ -19,9 +19,11 @@ def create_chat_room(request):
             # TODO : invite_user 가 존재하는 유저인지 체크할 필요가 있을듯
             return Response("초대할 user email 정보가 없습니다.", status=status.HTTP_400_BAD_REQUEST)
 
-        created_room_id = chat_client.create_chat_room(creator_email=creator, invite_email=invite_user)
+        created_room_id, creator_name, invited_user_name = chat_client.create_chat_room(creator_email=creator, invite_email=invite_user)
         return Response({
-            "room_id": created_room_id
+            "room_id": created_room_id,
+            "creator_name": creator_name,
+            "invited_user_name": invited_user_name,
         }, status=status.HTTP_201_CREATED)
 
     except Exception as ex:

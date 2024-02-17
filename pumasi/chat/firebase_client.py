@@ -21,7 +21,9 @@ class FirebaseClient:
             "messages": [],
             "members": [creator_email, invite_email]
         })
-        return doc_ref.id
+        creator_name = self._db.collection("user").document(creator_email).get().get("name")
+        invited_user_name = self._db.collection("user").document(invite_email).get().get("name")
+        return doc_ref.id, creator_name, invited_user_name
 
     def send_message(self, chat_room_id, user_email, message):
         chat_doc = self._chat_collection.document(chat_room_id).get()
