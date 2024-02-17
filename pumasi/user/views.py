@@ -63,7 +63,7 @@ def ChildDetail(request, pk, child_pk):
     
     if request.method == 'PATCH':
         child_doc_data = client.read_child(user_id=pk, child_number=child_pk)
-        
+
         # (request body가 serializer와 맞지 않으므로 사용 x)
         ### serializer = ChildSerializer(data=child_doc_data, many=True)
         ### if not serializer.is_valid():
@@ -73,9 +73,11 @@ def ChildDetail(request, pk, child_pk):
         ###        status=status.HTTP_400_BAD_REQUEST)
 
         client.update_child(user_id=pk, child_number=child_pk, update_data=request.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     if request.method == 'DELETE':
         client.delete_child(user_id=pk, child_number=child_pk)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # 실제 사용하는 기능 아님
