@@ -13,27 +13,48 @@ class FirebaseClient:
         self._user_collection: CollectionReference = self._db.collection("user")
 
     def create_care(self, user_email, care_data):
-        self._care_collection.document(user_email).set(care_data)
+        user_doc: DocumentSnapshot = self._user_collection.document(user_email).get()
+
+        if not user_doc.exists:
+            raise ValueError(f"user document for {user_email} doesn't exist.")
+
+        user_name = user_doc.get("name")
+        self._care_collection.document(user_email).set({
+            **care_data,
+            "user_name": user_name
+        })
 
     def update_care(self, user_email, update_data):
         self._care_collection.document(user_email).update(update_data)
 
     def read_care_all(self):
-        """
-        하나의 컬렉션에서 여러개의 문서를 읽어오는 방법 (컬렉션에서 여러 문서 가져오기 파트)
-        => https://firebase.google.com/docs/firestore/query-data/get-data?hl=ko
-        """
         docs = self._care_collection.stream()
-        return [{**doc.to_dict(), "id": doc.id} for doc in docs]
+        result = []
+        for doc in docs:
+            name = self._user_collection.document(doc.id).get().get("name")
+            result.append({
+                **doc.to_dict(),
+                "id": doc.id,
+                "user_name": name
+            })
+        return result
 
     def read_care(self, user_email):
-        print(user_email)
-        care_doc = self._care_collection.document(user_email).get()
-        if care_doc.exists:
-            care = care_doc.to_dict()
-        else:
+        care_doc: DocumentSnapshot = self._care_collection.document(user_email).get()
+        user_doc: DocumentSnapshot = self._user_collection.document(user_email).get()
+
+        if not care_doc.exists:
             raise ValueError(f"care document for {user_email} doesn't exist.")
-        return care
+
+        if not user_doc.exists:
+            raise ValueError(f"user document for {user_email} doesn't exist.")
+
+        care_data = care_doc.to_dict()
+        if "user_name" not in care_data.keys():
+            care_data["user_name"] = user_doc.get("name")
+
+        print(care_data)
+        return care_data
 
     def update_care_status(self, user_email, status):
         care_ref = self._care_collection.document(user_email)
