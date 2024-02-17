@@ -56,7 +56,7 @@ class FirebaseClient:
         print(child_number)
 
         child_collection = self._db.collection("user").document(user_id).collection("Child")
-        child_doc = child_collection.document(child_number).get()
+        child_doc = child_collection.document(str(child_number)).get()
         if child_doc.exists:
             child_page = child_doc.to_dict()
         else:
