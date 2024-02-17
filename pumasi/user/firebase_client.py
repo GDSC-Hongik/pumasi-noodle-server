@@ -90,12 +90,12 @@ class FirebaseClient:
     # child 문서의 정보를 수정한다
     def update_child(self, user_id, child_number, update_data):
         child_collection = self._db.collection("user").document(user_id).collection("Child")
-        child_collection.document(child_number).update(update_data)
+        child_collection.document(str(child_number)).update(update_data)
 
     # child 문서를 삭제한다
     def delete_child(self, user_id, child_number):
         child_collection = self._db.collection("user").document(user_id).collection("Child")
-        child_doc_to_delete = child_collection.document(child_number)
+        child_doc_to_delete = child_collection.document(str(child_number))
         child_doc_to_delete.delete()
 
     
