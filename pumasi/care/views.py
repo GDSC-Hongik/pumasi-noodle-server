@@ -86,11 +86,16 @@ def request_care(request, pk):
         if not requester_email:
             return Response({"error": "로그인 유저의 정보가 누락되었습니다."}, status=status.HTTP_401_UNAUTHORIZED)
 
+        if requester_email == pk:
+            return Response({"error": "자기 자신에게 맡기를 요청할 수 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
         if not child_id:
             return Response({"error": "child_id 가 요청 데이터에 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         client.request_care(care_id=pk, requester_email=requester_email, requester_child_id=child_id)
         return Response(status=status.HTTP_200_OK)
+    except ValueError as ex:
+        return Response({"error": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as ex:
         return Response(
             {"error": "의도치 않은 에러가 발생하였습니다.\n" + str(ex)},

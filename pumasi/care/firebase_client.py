@@ -75,14 +75,17 @@ class FirebaseClient:
     def request_care(self, care_id, requester_email, requester_child_id):
         try:
             care_ref = self._care_collection.document(care_id)
-            if care_ref.get().exists:
-                care_ref.update({
-                    "requester_email": requester_email,
-                    "requester_child_id": requester_child_id,
-                    "status": "reserved"
-                })
-            else:
+            if not care_ref.get().exists:
                 raise ValueError(f"care document for {care_id} doesn't exist.")
+
+            if care_ref.get().get("status") != CARE_WAITING:
+                raise ValueError(f"care document for {care_id}'s status should be {CARE_WAITING}")
+
+            care_ref.update({
+                "requester_email": requester_email,
+                "requester_child_id": requester_child_id,
+                "status": "reserved"
+            })
         except Exception as ex:
             raise ex
 
