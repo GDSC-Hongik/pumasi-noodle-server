@@ -63,7 +63,7 @@ def ChildDetail(request, pk, child_pk):
     
     if request.method == 'PATCH':
         child_doc_data = client.read_child(user_id=pk, child_number=child_pk)
-        serializer = ChildSerializer(child_doc_data, many=True)
+        serializer = ChildSerializer(data=child_doc_data, many=True)
         # DB에서 읽어온 child_doc_data 값을 시리얼라이저를 통한 유효성 검사
         if not serializer.is_valid():
             print("validation error")
