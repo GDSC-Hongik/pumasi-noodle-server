@@ -34,6 +34,7 @@ def UserDetail(request, pk):
         ###         status=status.HTTP_400_BAD_REQUEST)
 
         client.update_user(user_id=pk, update_data=request.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
