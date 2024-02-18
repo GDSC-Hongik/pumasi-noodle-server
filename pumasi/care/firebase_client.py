@@ -21,6 +21,8 @@ class FirebaseClient:
         user_name = user_doc.get("name")
         self._care_collection.document(user_email).set({
             **care_data,
+            "rating": 0.0,
+            "rating_count": 0,
             "user_name": user_name
         })
 

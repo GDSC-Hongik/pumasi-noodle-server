@@ -15,6 +15,7 @@ class CareSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=200)
     user_name = serializers.CharField(required=False)
     rating = serializers.FloatField(max_value=5.0, min_value=0.0, default=0.0)
+    rating_count = serializers.IntegerField(default=0)
     # id 필드는 백엔드에서 직접 넣어주는 값이라, 데이터를 생성할 때는 없어도 되는 값.
     id = serializers.CharField(max_length=200, required=False)
 
