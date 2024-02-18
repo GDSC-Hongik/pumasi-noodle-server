@@ -115,7 +115,7 @@ class FirebaseClient:
             if requester_email and requester_child_id:
 
                 # 가져온 care 문서들 중 requester_email 필드가 user_id와 같고 status가 accepted인 것들을 모아 반환
-                if requester_email == user_id and status == 'accepted':
+                if requester_email == user_id and status == 'reserved':
                     result.append({**doc.to_dict(), "id": doc.id})
             
             else:
