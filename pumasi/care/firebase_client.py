@@ -19,12 +19,17 @@ class FirebaseClient:
             raise ValueError(f"user document for {user_email} doesn't exist.")
 
         user_name = user_doc.get("name")
-        self._care_collection.document(user_email).set({
-            **care_data,
-            "rating": 0.0,
-            "rating_count": 0,
-            "user_name": user_name
-        })
+        if self._care_collection.document(user_email).get().exists: # 기존에 맡기 데이터를 만든적이 있음
+            self._care_collection.document(user_email).update({
+                **care_data,
+            })
+        else:
+            self._care_collection.document(user_email).set({
+                **care_data,
+                "rating": 0.0,
+                "rating_count": 0,
+                "user_name": user_name
+            })
 
     def update_care(self, user_email, update_data):
         self._care_collection.document(user_email).update(update_data)
